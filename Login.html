@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+   <script>
+    function register(){
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    if(email && password){
+        const user = {user, password};
+        localStorage.setItem('user', JSON.stringify(user));
+        alert('Register successfully!')}
+    else{
+        alert('Please enter email and password!')
+    }
+    }
+
+    function login(){
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const user = JSON.parse(localStorage.getItem('user'));
+        if(user && user.email === email && user.password === password){
+            alert('Login successfully');
+            document.getElementById('auth-section').classList.add('hidden')
+            document.getElementById('main-section').classList.remove('hidden');
+            loadData();
+        }
+        else{
+            alert('Email or password is unrecorded!')
+        }
+    }   
+   </script>
+</body>
+</html>

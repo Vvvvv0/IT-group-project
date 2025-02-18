@@ -25,8 +25,9 @@
         const user = JSON.parse(localStorage.getItem('user'));
         if(user && user.email === email && user.password === password){
             alert('Login successfully');
+            // 下面是指轉頁,主頁由hidden變消失,auth-section就hidden
             document.getElementById('auth-section').classList.add('hidden')
-            document.getElementById('main-section').classList.remove('hidden');
+            document.getElementById('main-page').classList.remove('hidden');
         }
         else{
             alert('Email or password is unrecorded!')

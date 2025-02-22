@@ -4,15 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        .hidden { display: none; }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <!-- 註冊與登入表單 -->
+        <div id="login-page">
+            <h2>註冊 / 登入</h2>
+            <div class="form-group">
+                <label for="email">電子郵件:</label>
+                <input type="email" id="email" placeholder="Enter email:">
+            </div>
+            <div class="form-group">
+                <label for="password">密碼:</label>
+                <input type="password" id="password" placeholder="Enter password:">
+            </div>
+            <button onclick="register()">Register</button>
+            <button onclick="login()">Login</button>
+
+        <!-- 主功能區塊 -->
+        <div id="main-page" class="hidden">
+            <h2>健康與健身追蹤</h2>
+        </div>
    <script>
     // finished
     function register(){
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     if(email && password){
-        const user = {user, password};
+        const user = {email, password};
         localStorage.setItem('user', JSON.stringify(user));
         alert('Register successfully!')}
     else{
@@ -26,9 +48,8 @@
         const user = JSON.parse(localStorage.getItem('user'));
         if(user && user.email === email && user.password === password){
             alert('Login successfully');
-            // 下面是指轉頁,主頁由hidden變消失,auth-section就hidden
             document.getElementById('login-page').classList.add('hidden')
-            // document.getElementById('main-page').classList.remove('hidden');
+            document.getElementById('main-page').classList.remove('hidden');
         }
         else{
             alert('Email or password is incorrect!')

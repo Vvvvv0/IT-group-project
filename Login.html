@@ -6,6 +6,20 @@
     <title>Document</title>
 </head>
 <body>
+    <div class="container">
+        <!-- 註冊與登入表單 -->
+        <div id="auth-section">
+            <h2>註冊 / 登入</h2>
+            <div class="form-group">
+                <label for="email">電子郵件:</label>
+                <input type="email" id="email" placeholder="輸入電子郵件">
+            </div>
+            <div class="form-group">
+                <label for="password">密碼:</label>
+                <input type="password" id="password" placeholder="輸入密碼">
+            </div>
+            <button onclick="register()">註冊</button>
+            <button onclick="login()">登入</button>
    <script>
     // 有兩個button,一個是register,一個是login
     function register(){

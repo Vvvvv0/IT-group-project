@@ -8,7 +8,7 @@
 <body>
     <div class="container">
         <!-- 註冊與登入表單 -->
-        <div id="auth-section">
+        <div id="login-page">
             <h2>註冊 / 登入</h2>
             <div class="form-group">
                 <label for="email">電子郵件:</label>
@@ -21,7 +21,7 @@
             <button onclick="register()">註冊</button>
             <button onclick="login()">登入</button>
    <script>
-    // 有兩個button,一個是register,一個是login
+    // finished
     function register(){
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
@@ -41,8 +41,8 @@
         if(user && user.email === email && user.password === password){
             alert('Login successfully');
             // 下面是指轉頁,主頁由hidden變消失,auth-section就hidden
-            document.getElementById('auth-section').classList.add('hidden')
-            document.getElementById('main-page').classList.remove('hidden');
+            document.getElementById('login-page').classList.add('hidden')
+            // document.getElementById('main-page').classList.remove('hidden');
         }
         else{
             alert('Email or password is unrecorded!')

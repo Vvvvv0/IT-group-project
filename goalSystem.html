@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .hidden{display: none;}
+    .main-page-hidden{display: none;}
+</style>
+<body>
+    <div class="hidden" id="missionList">
+        MissionList :
+        <div>Mission 1: xp: 10<button class="btn">Complete</button></div>
+        <div>Mission 2: xp: 20<button class="btn">Complete</button></div>
+        <div>Mission 3: xp: 10<button class="btn">Complete</button></div>
+    </div>
+    
+    <button id="showMissionList">Mission list<button id="leave">X</button></button>
+
+    <div class="main-page-hidden" id="main-page">
+        <h2>Main page</h2>
+        <p>Level: <span id="level">0</span></p>
+        <p>XP: <span id="xp-display">0</span></p>
+        <p>Next level XP: <span id="nextLevelXP"></span></p>
+        <div class="progress-bar"></div>
+    </div>
+    
+
+    </div>
+    <script>
+        let level = 0;
+        let xp = 0;
+        let nextLevelXP = 100;
+        
+        const showMissionList = document.getElementById('showMissionList')
+        const missionList = document.getElementById('missionList')
+        const btn = document.getElementsByClassName('btn')
+        const leave = document.getElementById('leave')
+        const mainPage = document.getElementById('main-page')
+        let xpDisplay = document.getElementById('xp-display')
+
+        showMissionList.addEventListener('click', function(){
+            missionList.classList.remove('hidden')
+            mainPage.classList.add('main-page-hidden')
+       })
+       for(let i = 0; i < btn.length; i++){
+            btn[i].addEventListener('click', function(){
+                btn[i].innerHTML = 'Completed'
+                btn[i].disabled = true
+                if(i === 0){
+                    xp += 10
+                }else if(i === 1){
+                    xp += 20
+                }else if(i === 2){
+                    xp += 10
+                }
+                xpDisplay.innerHTML = `${xp}`;
+        })}
+        for(let i = 0; i < btn.length; i++){
+            if(xp >= nextLevelXP){
+                level ++
+                xp = xp - nextLevelXP
+                nextLevelXP = Math.round(nextLevelXP * 1.5)
+            }
+        }
+       leave.addEventListener('click', function(){
+        missionList.classList.add('hidden')
+        mainPage.classList.remove('main-page-hidden')
+       })
+    </script>
+</body>
+</html>

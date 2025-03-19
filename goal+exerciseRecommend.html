@@ -8,14 +8,6 @@
     <style>
         .hidden { display: none; }
         .main-page-hidden { display: block; }
-        .progress-bar {
-            background-color: #e0e0e0;
-            border-radius: 5px;
-        }
-        .progress {
-            background-color: #76c7c0;
-            height: 20px;
-        }
         .video-container {
             display: flex;
             flex-wrap: wrap;
@@ -36,33 +28,6 @@
         <div>Mission 3: xp: 30<button id="mission3" onclick="completeTask('mission3', 30)">Complete</button></div>
     </div>
     
-    <h2>Goal setting</h2>
-        <div>
-            <h3>Day's step goal</h3>
-            <input type="number" id="stepGoal" placeholder="Enter step goal per day">
-            <button class="button" onclick="setStepGoal()">Set goal</button>
-            <p>当前目标：<span id="currentStepGoal">0</span> steps</p>
-            <div class="progress-bar">
-            <div class="progress" id="stepProgress" style="width: 0%;">0%</div>
-        </div>
-        <div>
-            <h3>Week's exercise goal</h3>
-            <input type="number" id="exerciseGoal" placeholder="Enter exercise time per week (hour >= 1)">
-            <button class="button" onclick="setExerciseGoal()">Set goal</button>
-            <p>当前目标：<span id="currentExerciseGoal">0</span> hours</p>
-            <div class="progress-bar">
-                <div class="progress" id="exerciseProgress" style="width: 0%;">0%</div>
-            </div>
-        </div>
-        <h2>Progress tracking</h2>
-        <div>
-            <h3>Update tracking</h3>
-            <input type="number" id="stepsTaken" placeholder="Enter today's finished steps">
-            <button class="button" onclick="updateSteps()">Update steps</button>
-            <input type="number" id="exerciseDone" placeholder="Enter week's exercise time(hour)">
-            <button class="button" onclick="updateExercise()">Update exercise hour</button>
-        </div>
-        
     <button id="showMissionList">Mission list<button id="leave">X</button></button>
     <div class="main-page-hidden" id="main-page">
         <h2>Main page</h2>
@@ -79,10 +44,6 @@
     </div>
     <button id="clearData">Clear Data</button>
     <script>
-        let stepGoal = localStorage.getItem('stepGoal') ? parseInt(localStorage.getItem('stepGoal')) : 0;
-        let exerciseGoal = localStorage.getItem('exerciseGoal') ? parseInt(localStorage.getItem('exerciseGoal')) : 0;
-        let stepsTaken = localStorage.getItem('stepsTaken') ? parseInt(localStorage.getItem('stepsTaken')) : 0;
-        let exerciseDone = localStorage.getItem('exerciseDone') ? parseInt(localStorage.getItem('exerciseDone')) : 0;
         let level = parseInt(localStorage.getItem('level')) || 0;
         let xp = parseInt(localStorage.getItem('xp')) || 0;
         let nextLevelXP = parseInt(localStorage.getItem('nextLevelXP')) || 100;
@@ -94,51 +55,7 @@
         const levelDisplay = document.getElementById('level-display');
         const nextLevelXP_Display = document.getElementById('nextLevelXP-display');
         const clearData = document.getElementById('clearData');
-
-        function setStepGoal() {
-            stepGoal = document.getElementById('stepGoal').value;
-            localStorage.setItem('stepGoal', stepGoal);
-            document.getElementById('currentStepGoal').innerText = stepGoal
-            updateProgress()
-        }
-
-        function setExerciseGoal() {
-            exerciseGoal = document.getElementById('exerciseGoal').value;
-            if(exerciseGoal <= 0){
-                alert("Enter the hour at least 1")
-                return 1;
-                
-            }
-            localStorage.setItem('exerciseGoal', exerciseGoal);
-            document.getElementById('currentExerciseGoal').innerText = exerciseGoal;
-            updateProgress()
-        }
-
-        function updateSteps() {
-           stepsTaken = document.getElementById('stepsTaken').value;
-           localStorage.setItem('stepsTaken', stepsTaken);  
-           updateProgress()
-        }
-
-        function updateExercise() {
-           exerciseDone = document.getElementById('exerciseDone').value;
-           localStorage.setItem('exerciseDone', exerciseDone);
-           updateProgress()
-        }
-
-        function updateProgress() {
-            if(stepGoal > 0){
-                const stepProgress = (stepsTaken / stepGoal) * 100;
-                document.getElementById('stepProgress').style.width = stepProgress + '%';
-                document.getElementById('stepProgress').innerText = Math.round(stepProgress) + '%';
-            }
-            if(exerciseGoal > 0){
-                const exerciseProgress = (exerciseDone / exerciseGoal) * 100;
-                document.getElementById('exerciseProgress').style.width = exerciseProgress + '%';
-                document.getElementById('exerciseProgress').innerText = Math.round(exerciseProgress) + '%';
-            }
-        }
-
+        
         showMissionList.addEventListener('click', function() {
             missionList.classList.remove('hidden');
             mainPage.style.display = 'none';
@@ -262,13 +179,6 @@
     document.getElementById('recommendExercise').addEventListener('click', recommendExercise);
     document.getElementById('leaveRecommend').addEventListener('click', leaveRecommend);
 
-        window.onload = function () {
-            document.getElementById('currentStepGoal').innerText = stepGoal;
-            document.getElementById('currentExerciseGoal').innerText = exerciseGoal;
-            document.getElementById('stepsTaken').value = stepsTaken;
-            document.getElementById('exerciseDone').value = exerciseDone;
-            updateProgress();
-        };
 
         window.onload = function() {
             updateDisplay();

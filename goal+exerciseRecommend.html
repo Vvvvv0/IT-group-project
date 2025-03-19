@@ -104,6 +104,9 @@
 
         function setExerciseGoal() {
             exerciseGoal = document.getElementById('exerciseGoal').value;
+            if(exerciseGoal <= 0){
+                return 1;
+            }
             localStorage.setItem('exerciseGoal', exerciseGoal);
             document.getElementById('currentExerciseGoal').innerText = exerciseGoal;
             updateProgress()

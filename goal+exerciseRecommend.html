@@ -47,7 +47,7 @@
         </div>
         <div>
             <h3>Week's exercise goal</h3>
-            <input type="number" id="exerciseGoal" placeholder="Enter exercise time per week (hour)">
+            <input type="number" id="exerciseGoal" placeholder="Enter exercise time per week (hour >= 1)">
             <button class="button" onclick="setExerciseGoal()">Set goal</button>
             <p>当前目标：<span id="currentExerciseGoal">0</span> hours</p>
             <div class="progress-bar">
@@ -106,6 +106,7 @@
             exerciseGoal = document.getElementById('exerciseGoal').value;
             if(exerciseGoal <= 0){
                 return 1;
+                alert("Enter the hour at least 1")
             }
             localStorage.setItem('exerciseGoal', exerciseGoal);
             document.getElementById('currentExerciseGoal').innerText = exerciseGoal;

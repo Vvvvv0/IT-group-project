@@ -105,8 +105,9 @@
         function setExerciseGoal() {
             exerciseGoal = document.getElementById('exerciseGoal').value;
             if(exerciseGoal <= 0){
-                return 1;
                 alert("Enter the hour at least 1")
+                return 1;
+                
             }
             localStorage.setItem('exerciseGoal', exerciseGoal);
             document.getElementById('currentExerciseGoal').innerText = exerciseGoal;
@@ -129,7 +130,7 @@
             if(stepGoal > 0){
                 const stepProgress = (stepsTaken / stepGoal) * 100;
                 if(stepProgress > 100){
-                    return 100;
+                    return ;
                 }
                 document.getElementById('stepProgress').style.width = stepProgress + '%';
                 document.getElementById('stepProgress').innerText = Math.round(stepProgress) + '%';
@@ -137,7 +138,7 @@
             if(exerciseGoal > 0){
                 const exerciseProgress = (exerciseDone / exerciseGoal) * 100;
                 if(exerciseProgress > 100){
-                    return 100;
+                    return ;
                 }
                 document.getElementById('exerciseProgress').style.width = exerciseProgress + '%';
                 document.getElementById('exerciseProgress').innerText = Math.round(exerciseProgress) + '%';

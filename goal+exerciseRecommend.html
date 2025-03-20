@@ -43,7 +43,6 @@
         <button onclick="leaveRecommend()">X</button>
         <div class="video-container" id="videoContainer"></div>
     </div>
-    <button id="clearData">Clear Data</button>
     <script>
         let level = parseInt(localStorage.getItem('level')) || 0;
         let xp = parseInt(localStorage.getItem('xp')) || 0;
@@ -70,15 +69,6 @@
             exercise.style.display = 'block';
         });
         
-        clearData.addEventListener('click', function() {
-            localStorage.clear();
-            level = 0;
-            xp = 0;
-            nextLevelXP = 100;
-            updateDisplay();
-            resetTasks();
-            alert('All data has been cleared.');
-        });
         function completeTask(missionId, xpReward) {
             const button = document.getElementById(missionId);
             if (button.disabled) return; 

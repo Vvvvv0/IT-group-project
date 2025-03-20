@@ -60,11 +60,13 @@
         showMissionList.addEventListener('click', function() {
             missionList.classList.remove('hidden');
             mainPage.style.display = 'none';
+            exercise.style.display = 'none';
         });
         
         leave.addEventListener('click', function() {
             missionList.classList.add('hidden');
             mainPage.style.display = 'block';
+            exercise.style.display = 'block';
         });
         
         clearData.addEventListener('click', function() {

@@ -36,7 +36,7 @@
         <p>Next level XP: <span id="nextLevelXP-display">100</span></p>
     </div>
     <h2>Exercise recommendation</h2>
-    <div>
+    <div id="exercise" >
         <h3>Recommended exercise</h3>
         <button onclick="recommendExercise()">Get recommendation</button>
         <button onclick="leaveRecommend()">X</button>
@@ -55,10 +55,13 @@
         const levelDisplay = document.getElementById('level-display');
         const nextLevelXP_Display = document.getElementById('nextLevelXP-display');
         const clearData = document.getElementById('clearData');
+        const exercise = document.getElementById('exercise');
         
         showMissionList.addEventListener('click', function() {
             missionList.classList.remove('hidden');
             mainPage.style.display = 'none';
+            exercise.style.display = 'none';
+            
 
         });
         leave.addEventListener('click', function() {

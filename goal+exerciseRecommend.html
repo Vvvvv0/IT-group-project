@@ -28,7 +28,7 @@
         <div>Mission 3: xp: 30<button id="mission3" onclick="completeTask('mission3', 30)">Complete</button></div>
     </div>
     
-    <button id="showMissionList">Mission list<button id="leave">X</button></button>
+    <button onclick="showMissionList()">Mission list<button onclick="leave()">X</button></button>
     <div class="main-page-hidden" id="main-page">
         <h2>Main page</h2>
         <p>Level: <span id="level-display">0</span></p>
@@ -47,7 +47,6 @@
         let level = parseInt(localStorage.getItem('level')) || 0;
         let xp = parseInt(localStorage.getItem('xp')) || 0;
         let nextLevelXP = parseInt(localStorage.getItem('nextLevelXP')) || 100;
-        const showMissionList = document.getElementById('showMissionList');
         const missionList = document.getElementById('missionList');
         const leave = document.getElementById('leave');
         const mainPage = document.getElementById('main-page');
@@ -57,16 +56,15 @@
         const clearData = document.getElementById('clearData');
         const exercise = document.getElementById('exercise');
         
-        showMissionList.addEventListener('click', function() {
+        function showMissionList() {
             missionList.classList.remove('hidden');
             mainPage.style.display = 'none';
             exercise.style.display = 'none';
-            
-
-        });
-        leave.addEventListener('click', function() {
+        };
+        function leave() {
             missionList.classList.add('hidden');
             mainPage.style.display = 'block';
+            exercise.style.display = 'block';
         });
         clearData.addEventListener('click', function() {
             localStorage.clear();

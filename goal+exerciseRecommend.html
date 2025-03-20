@@ -57,16 +57,16 @@
         const clearData = document.getElementById('clearData');
         const exercise = document.getElementById('exercise');
         
-        function showMissionList() {
+        showMissionList.addEventListener('click', function() {
             missionList.classList.remove('hidden');
             mainPage.style.display = 'none';
-            exercise.style.display = 'none';
-        };
-        function leave() {
+        });
+        
+        leave.addEventListener('click', function() {
             missionList.classList.add('hidden');
             mainPage.style.display = 'block';
-            exercise.style.display = 'block';
         });
+        
         clearData.addEventListener('click', function() {
             localStorage.clear();
             level = 0;
@@ -186,7 +186,6 @@
             updateDisplay();
             initializeTasks();
             leaveRecommend();
-            showMissionList();
         };
     </script>
 </body>

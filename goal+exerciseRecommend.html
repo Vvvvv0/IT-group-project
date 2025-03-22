@@ -19,34 +19,37 @@
     </style>
 </head>
 <body>
-    //finished
     <h1>Health and Fitness tracking app</h1>
     <div class="hidden" id="missionList">
         MissionList :
-        <div>Mission 1: xp: 20<button id="mission1" onclick="completeTask('mission1', 20)">Complete</button></div>
-        <div>Mission 2: xp: 20<button id="mission2" onclick="completeTask('mission2', 20)">Complete</button></div>
-        <div>Mission 3: xp: 30<button id="mission3" onclick="completeTask('mission3', 30)">Complete</button></div>
+        <div>Mission 1: Drink at least 8 glasses of water xp: 10<button id="mission1" onclick="completeTask('mission1', 10)">Complete</button></div>
+        <div>Mission 2: Include at least 5 servings of fruits and vegetables in your meals xp: 15<button id="mission2" onclick="completeTask('mission2', 15)">Complete</button></div>
+        <div>Mission 3: Engage in a stress-relief activity like yoga, reading, or listening to music for 15 minutes xp: 15<button id="mission3" onclick="completeTask('mission3', 15)">Complete</button></div>
+        <div>Mission 4: Complete a 15-30 minutes workout xp: 20<button id="mission4" onclick="completeTask('mission4', 20)">Complete</button></div>
+        <div>Mission 5 Follow a bedtime routine to prepare for a good night's sleep xp: 30<button id="mission5" onclick="completeTask('mission5', 30)">Complete</button></div>
     </div>
     
     <button id="showMissionList">Mission list</button>
-    <button id="leave">X</button>
+    <button id="leave" class="hidden">X</button>
     <div class="main-page-hidden" id="main-page">
         <h2>Main page</h2>
         <p>Level: <span id="level-display">0</span></p>
         <p>XP: <span id="xp-display">0</span></p>
-        <p>Next level XP: <span id="nextLevelXP-display">100</span></p>
+        <p>Next level XP: <span id="nextLevelXP-display">50</span></p>
     </div>
     <div id="exercise" >
     <h2>Exercise recommendation</h2>
         <h3>Recommended exercise</h3>
         <button onclick="recommendExercise()">Get recommendation</button>
-        <button onclick="leaveRecommend()">X</button>
+        <button id="leaveExercise" onclick="leaveRecommend()">X</button>
         <div class="video-container" id="videoContainer"></div>
     </div>
+    <button id="clearData">Clear Data</button>
     <script>
+
         let level = parseInt(localStorage.getItem('level')) || 0;
         let xp = parseInt(localStorage.getItem('xp')) || 0;
-        let nextLevelXP = parseInt(localStorage.getItem('nextLevelXP')) || 100;
+        let nextLevelXP = parseInt(localStorage.getItem('nextLevelXP')) || 50;
         const showMissionList = document.getElementById('showMissionList');
         const missionList = document.getElementById('missionList');
         const leave = document.getElementById('leave');
@@ -56,19 +59,31 @@
         const nextLevelXP_Display = document.getElementById('nextLevelXP-display');
         const clearData = document.getElementById('clearData');
         const exercise = document.getElementById('exercise');
+        const leaveExercise = document.getElementById('leaveExerxise')
         
         showMissionList.addEventListener('click', function() {
             missionList.classList.remove('hidden');
             mainPage.style.display = 'none';
             exercise.style.display = 'none';
+            leave.style.display = 'block'
         });
         
         leave.addEventListener('click', function() {
             missionList.classList.add('hidden');
             mainPage.style.display = 'block';
             exercise.style.display = 'block';
+            leave.style.display = 'none'
         });
         
+        clearData.addEventListener('click', function() {
+            localStorage.clear();
+            level = 0;
+            xp = 0;
+            nextLevelXP = 50;
+            updateDisplay();
+            resetTasks();
+            alert('All data has been cleared.');
+        });
         function completeTask(missionId, xpReward) {
             const button = document.getElementById(missionId);
             if (button.disabled) return; 
@@ -84,20 +99,22 @@
             if (xp >= nextLevelXP) {
                 level++;
                 xp = xp - nextLevelXP;
-                nextLevelXP = Math.round(nextLevelXP * 1.5);
+                nextLevelXP = Math.round(nextLevelXP * 2);
                 alert(`Level up! You are now level ${level}.`);
                 localStorage.setItem('level', level);
                 localStorage.setItem('nextLevelXP', nextLevelXP);
                 updateDisplay();
+                updateAchievementImage(level);
             }
         }
+
         function updateDisplay() {
             xpDisplay.textContent = xp;
             levelDisplay.textContent = level;
             nextLevelXP_Display.textContent = nextLevelXP;
         }
         function resetTasks() {
-            const missions = ['mission1', 'mission2', 'mission3'];
+            const missions = ['mission1', 'mission2', 'mission3', 'mission4', 'mission5'];
             missions.forEach(missionId => {
                 const button = document.getElementId(missionId);
                 button.disabled = false;
@@ -113,7 +130,7 @@
                 localStorage.removeItem("mission3_completed");
                 localStorage.setItem("last_update_date", currentDate);
             }
-            const missions = ['mission1', 'mission2', 'mission3'];
+            const missions = ['mission1', 'mission2', 'mission3', 'mission4', 'mission5'];
             missions.forEach(missionId => {
                 const completed = localStorage.getItem(missionId + "_completed") === "true";
                 const button = document.getElementById(missionId);

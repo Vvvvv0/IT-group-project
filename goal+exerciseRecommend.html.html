@@ -22,39 +22,78 @@
     </style>
 </head>
 <body>
-    <h1>Health and Fitness tracking app</h1>
-    <div class="hidden" id="missionList">
-        MissionList :
-        <div>Mission 1: Drink at least 8 glasses of water xp: 10<button id="mission1" onclick="completeTask('mission1', 10)">Complete</button></div>
-        <div>Mission 2: Include at least 5 servings of fruits and vegetables in your meals xp: 15<button id="mission2" onclick="completeTask('mission2', 15)">Complete</button></div>
-        <div>Mission 3: Engage in a stress-relief activity like yoga, reading, or listening to music for 15 minutes xp: 15<button id="mission3" onclick="completeTask('mission3', 15)">Complete</button></div>
-        <div>Mission 4: Complete a 15-30 minutes workout xp: 20<button id="mission4" onclick="completeTask('mission4', 20)">Complete</button></div>
-        <div>Mission 5 Follow a bedtime routine to prepare for a good night's sleep xp: 30<button id="mission5" onclick="completeTask('mission5', 30)">Complete</button></div>
+    <div id="login-container" class="container">
+        <h2>Login</h2>
+        <form id="login-form">
+            <label for="username">Username:</label>
+            <input type="text" id="username" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" required>
+            <button type="submit">Login</button>
+        </form>
+        <p id="login-error" class="hidden">Invalid username or password.</p>
     </div>
     
-    <button id="showMissionList">Mission list</button>
-    <button id="leave" class="hidden">X</button>
-    <div class="main-page-hidden" id="main-page">
-        <h2>Main page</h2>
-        <p>Level: <span id="level-display">0</span></p>
-        <p>XP: <span id="xp-display">0</span></p>
-        <p>Next level XP: <span id="nextLevelXP-display">50</span></p>
+    <div id="app-container" class="hidden">
+        <h1>Health and Fitness tracking app</h1>
+        <div class="hidden" id="missionList">
+            MissionList :
+            <div>Mission 1: Drink at least 8 glasses of water xp: 10<button id="mission1" onclick="completeTask('mission1', 10)">Complete</button></div>
+            <div>Mission 2: Include at least 5 servings of fruits and vegetables in your meals xp: 15<button id="mission2" onclick="completeTask('mission2', 15)">Complete</button></div>
+            <div>Mission 3: Engage in a stress-relief activity like yoga, reading, or listening to music for 15 minutes xp: 15<button id="mission3" onclick="completeTask('mission3', 15)">Complete</button></div>
+            <div>Mission 4: Complete a 15-30 minutes workout xp: 20<button id="mission4" onclick="completeTask('mission4', 20)">Complete</button></div>
+            <div>Mission 5 Follow a bedtime routine to prepare for a good night's sleep xp: 30<button id="mission5" onclick="completeTask('mission5', 30)">Complete</button></div>
+        </div>
+        
+        <button id="showMissionList">Mission list</button>
+        <button id="leave" class="hidden">X</button>
+        <div class="main-page-hidden" id="main-page">
+            <h2>Main page</h2>
+            <p>Level: <span id="level-display">0</span></p>
+            <p>XP: <span id="xp-display">0</span></p>
+            <p>Next level XP: <span id="nextLevelXP-display">50</span></p>
+        </div>
+
+        <div class="container">
+            <h2>Achievement</h2>
+            <div class="achievement" id="achievements"></div>
+        </div>
+
+        <div id="exercise" >
+        <h2>Exercise recommendation</h2>
+            <h3>Recommended exercise</h3>
+            <button onclick="recommendExercise()">Get recommendation</button>
+            <button id="leaveExercise" onclick="leaveRecommend()">X</button>
+            <div class="video-container" id="videoContainer"></div>
+        </div>
+        <button id="clearData">Clear Data</button>
     </div>
 
-    <div class="container">
-        <h2>Achievement</h2>
-        <div class="achievement" id="achievements"></div>
-    </div>
-
-    <div id="exercise" >
-    <h2>Exercise recommendation</h2>
-        <h3>Recommended exercise</h3>
-        <button onclick="recommendExercise()">Get recommendation</button>
-        <button id="leaveExercise" onclick="leaveRecommend()">X</button>
-        <div class="video-container" id="videoContainer"></div>
-    </div>
-    <button id="clearData">Clear Data</button>
     <script>
+        const users = [
+            { username: 'user1', password: 'password1' },
+            { username: 'user2', password: 'password2' }
+        ];
+
+        const loginContainer = document.getElementById('login-container');
+        const appContainer = document.getElementById('app-container');
+        const loginForm = document.getElementById('login-form');
+        const loginError = document.getElementById('login-error');
+
+        loginForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const user = users.find(user => user.username === username && user.password === password);
+
+            if (user) {
+                localStorage.setItem('loggedInUser', username);
+                loginContainer.classList.add('hidden');
+                appContainer.classList.remove('hidden');
+            } else {
+                loginError.classList.remove('hidden');
+            }
+        });
 
         let level = parseInt(localStorage.getItem('level')) || 0;
         let xp = parseInt(localStorage.getItem('xp')) || 0;
@@ -243,8 +282,12 @@
     document.getElementById('recommendExercise').addEventListener('click', recommendExercise);
     document.getElementById('leaveRecommend').addEventListener('click', leaveRecommend);
 
-
         window.onload = function() {
+            const loggedInUser = localStorage.getItem('loggedInUser');
+            if (loggedInUser) {
+                loginContainer.classList.add('hidden');
+                appContainer.classList.remove('hidden');
+            }
             updateDisplay();
             initializeTasks();
             displayAchievements();

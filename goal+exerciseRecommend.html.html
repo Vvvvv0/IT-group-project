@@ -159,7 +159,7 @@
             return savedAchievements;
         }
         function savedAchievements(achievements){
-            localStorage.setItem('achievements', JSON.stringify('achievements'));
+            localStorage.setItem('achievements', JSON.stringify(achievements));
         }
         function checkAchievements(level){
             const achievements = loadAchievements();

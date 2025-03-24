@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness App</title>
+    <style>
+        .hidden { display: none; }
+        .main-page-hidden { display: block; }
+        .video-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            border-radius: 5px;
+            padding: 10px;
+            width: calc(33.33% - 10px);
+            box-sizing: border-box;
+        }
+        .container { max-width: 600px; margin: 0 auto; }
+        .achievements { margin-top: 20px; }
+        .achievement { padding: 10px; border: 1px solid #ccc; margin-bottom: 10px; text-align: left; }
+        .icon { cursor: pointer; position: absolute; top: 10px; right: 10px; }
+    </style>
+</head>
+<body>
+    <div id="login-container" class="container">
+        <h2>Login</h2>
+        <form id="login-form">
+            <label for="username">Username:</label>
+            <input type="text" id="username" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" required>
+            <button type="submit">Login</button>
+            <button type="button" onclick="showRegister()">Register</button>
+            <button onclick="rl_logout()">Log out</button>
+        </form>
+        <p id="login-error" class="hidden">Invalid username or password.</p>
+    </div>
+
+    <div id="register-container" class="container hidden">
+        <h2>Register</h2>
+        <form id="register-form">
+            <label for="new-username">Username:</label>
+            <input type="text" id="new-username" required>
+            <label for="new-password">Password:</label>
+            <input type="password" id="new-password" required>
+            <button type="submit">Register</button>
+            <button type="button" onclick="showLogin()">Back to login</button>
+            <button onclick="rl_logout()">Log out</button>
+        </form>
+        <p id="register-error" class="hidden">Account already exists!</p>
+    </div>
+
+    <div id="app-container" class="hidden">
+        <h1>Health and Fitness tracking app</h1>
+        <div class="icon" onclick="show_RegisterLogin()">Register</div>
+        <div class="hidden" id="missionList">
+            MissionList:
+            <div>Mission 1: Drink at least 8 glasses of water xp: 10<button id="mission1" onclick="completeTask('mission1', 10)">Complete</button></div>
+            <div>Mission 2: Include at least 5 servings of fruits and vegetables in your meals xp: 15<button id="mission2" onclick="completeTask('mission2', 15)">Complete</button></div>
+            <div>Mission 3: Engage in a stress-relief activity like yoga, reading, or listening to music for 15 minutes xp: 15<button id="mission3" onclick="completeTask('mission3', 15)">Complete</button></div>
+            <div>Mission 4: Complete a 15-30 minutes workout xp: 20<button id="mission4" onclick="completeTask('mission4', 20)">Complete</button></div>
+            <div>Mission 5: Follow a bedtime routine to prepare for a good night's sleep xp: 30<button id="mission5" onclick="completeTask('mission5', 30)">Complete</button></div>
+        </div>
+        <div id="mission">
+            <button id="showMissionList">Mission list</button>
+            <button id="leave" class="hidden">X</button>
+            <div class="main-page-hidden" id="main-page">
+                <h2>Main page</h2>
+                <p>Level: <span id="level-display">0</span></p>
+                <p>XP: <span id="xp-display">0</span></p>
+                <p>Next level XP: <span id="nextLevelXP-display">50</span></p>
+            </div>
+        </div>
+
+        <div id="ach" class="container">
+            <h2>Achievement</h2>
+            <div class="achievement" id="achievements"></div>
+        </div>
+
+        <div id="exercise">
+            <h2>Exercise recommendation</h2>
+            <h3>Recommended exercise</h3>
+            <button onclick="recommendExercise()">Get recommendation</button>
+            <button id="leaveExercise" onclick="leaveRecommend()">X</button>
+            <div class="video-container" id="videoContainer"></div>
+        </div>
+        <button id="clearData">Clear Data</button>
+    </div>
+
+    <script>
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+        const loginContainer = document.getElementById('login-container');
+        const registerContainer = document.getElementById('register-container');
+        const appContainer = document.getElementById('app-container');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const loginError = document.getElementById('login-error');
+        const registerError = document.getElementById('register-error');
+        const mission = document.getElementById('mission')
+        const ach = document.getElementById('ach')
+        let currentUser = null;
+
+        function show_RegisterLogin(){
+            showRegister();
+        }
+
+        function showLogin() {
+            loginContainer.classList.remove('hidden');
+            registerContainer.classList.add('hidden');
+        }
+
+        function showRegister() {
+            loginContainer.classList.add('hidden');
+            registerContainer.classList.remove('hidden');
+            appContainer.classList.add('hidden');
+        }
+
+        function showMainPage(){
+            appContainer.classList.remove('hidden');
+            registerContainer.classList.add('hidden');
+            loginContainer.classList.add('hidden');
+            mission.classList.add('hidden');
+            ach.classList.add('hidden');
+        }
+
+        function rl_logout() {
+            currentUser = null;
+            showMainPage();
+        }
+
+        loginForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const user = users.find(user => user.username === username && user.password === password);
+
+            if (user) {
+                localStorage.setItem('Username', username);
+                currentUser = user;
+                loginContainer.classList.add('hidden');
+                appContainer.classList.remove('hidden');
+                mission.classList.remove('hidden');
+                ach.classList.remove('hidden');
+                loadUserData();
+                initializeTasks();
+                updateDisplay();
+            } else {
+                loginError.classList.remove('hidden');
+            }
+        });
+
+        registerForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const username = document.getElementById('new-username').value;
+            const password = document.getElementById('new-password').value;
+
+            if (users.some(user => user.username === username)) {
+                registerError.classList.remove('hidden');
+            } else {
+                users.push({ username, password, level: 0, xp: 0, nextLevelXP: 50, missions: {}, achievements: [] });
+                localStorage.setItem('users', JSON.stringify(users));
+                registerError.classList.add('hidden');
+                showLogin();
+            }
+        });
+
+        function logout() {
+            localStorage.removeItem('Username')
+            currentUser = null;
+            appContainer.classList.add('hidden');
+            loginContainer.classList.remove('hidden');
+        }
+
+        window.addEventListener("beforeunload", function (event) {
+            logout();
+        });
+
+        document.addEventListener("visibilitychange", function () {
+            if (document.visibilityState === "hidden") {
+                logout();
+            }
+        });
+
+        
+        const showMissionList = document.getElementById('showMissionList');
+        const missionList = document.getElementById('missionList');
+        const leave = document.getElementById('leave');
+        const mainPage = document.getElementById('main-page');
+        const xpDisplay = document.getElementById('xp-display');
+        const levelDisplay = document.getElementById('level-display');
+        const nextLevelXP_Display = document.getElementById('nextLevelXP-display');
+        const clearData = document.getElementById('clearData');
+        const exercise = document.getElementById('exercise');
+
+        showMissionList.addEventListener('click', function() {
+            missionList.classList.remove('hidden');
+            mainPage.classList.add('hidden');
+            exercise.classList.add('hidden');
+            leave.classList.remove('hidden');
+        });
+
+        leave.addEventListener('click', function() {
+            missionList.classList.add('hidden');
+            mainPage.classList.remove('hidden');
+            exercise.classList.remove('hidden');
+            leave.classList.add('hidden');
+        });
+
+        clearData.addEventListener('click', function() {
+            localStorage.clear();
+            currentUser.level = 0;
+            currentUser.xp = 0;
+            currentUser.nextLevelXP = 50;
+            currentUser.missions = {};
+            currentUser.achievements = [];
+            saveUserData();
+            updateDisplay();
+            resetTasks();
+            alert('All data has been cleared.');
+        });
+
+        function completeTask(missionId, xpReward) {
+            const button = document.getElementById(missionId);
+            if (button.disabled) return;
+            button.disabled = true;
+            button.textContent = "Completed";
+            currentUser.missions[missionId] = true;
+            currentUser.xp += xpReward;
+            saveUserData();
+            updateDisplay();
+            checkLevelUP();
+        }
+
+        function checkLevelUP() {
+            if (currentUser.xp >= currentUser.nextLevelXP) {
+                currentUser.level++;
+                currentUser.xp = currentUser.xp - currentUser.nextLevelXP;
+                currentUser.nextLevelXP = Math.round(currentUser.nextLevelXP * 2);
+                alert(`Level up! You are now level ${currentUser.level}.`);
+                saveUserData();
+                updateDisplay();
+                checkAchievements(currentUser.level);
+            }
+        }
+
+        function updateDisplay() {
+            xpDisplay.textContent = currentUser.xp;
+            levelDisplay.textContent = currentUser.level;
+            nextLevelXP_Display.textContent = currentUser.nextLevelXP;
+        }
+
+        function resetTasks() {
+            const missions = ['mission1', 'mission2', 'mission3', 'mission4', 'mission5'];
+            missions.forEach(missionId => {
+                const button = document.getElementById(missionId);
+                button.disabled = false;
+                button.textContent = "Complete";
+            });
+            displayAchievements();
+        }
+
+        function initializeTasks() {
+            const missions = ['mission1', 'mission2', 'mission3', 'mission4', 'mission5'];
+            missions.forEach(missionId => {
+                const completed = currentUser.missions[missionId] === true;
+                const button = document.getElementById(missionId);
+                if (completed) {
+                    button.disabled = true;
+                    button.textContent = "Completed";
+                }
+            });
+        }
+
+        const achievements = [
+            { level: 1, unlocked: false },
+            { level: 5, unlocked: false },
+            { level: 10, unlocked: false }
+        ];
+
+        function loadAchievements() {
+            return currentUser.achievements.length ? currentUser.achievements : achievements;
+        }
+
+        function saveAchievements(achievements) {
+            currentUser.achievements = achievements;
+            saveUserData();
+        }
+
+        function checkAchievements(level) {
+            const achievements = loadAchievements();
+            let newAchievements = false;
+            achievements.forEach(achievement => {
+                if (!achievement.unlocked && level >= achievement.level) {
+                    achievement.unlocked = true;
+                    newAchievements = true;
+                    alert(`Unlock achievement! You reached level ${achievement.level}!`);
+                }
+            });
+            if (newAchievements) {
+                saveAchievements(achievements);
+                displayAchievements();
+            }
+        }
+
+        function displayAchievements() {
+            const achievements = loadAchievements();
+            const achievementsContainer = document.getElementById('achievements');
+            achievementsContainer.innerHTML = '';
+
+            achievements.forEach(achievement => {
+                if (achievement.unlocked) {
+                    const achievementElement = document.createElement('div');
+                    achievementElement.className = 'achievement';
+                    achievementElement.innerHTML = `
+                        <strong>Level ${achievement.level}</strong><br>`;
+                    achievementsContainer.appendChild(achievementElement);
+                }
+            });
+        }
+
+        function recommendExercise() {
+            const videoContainer = document.getElementById('videoContainer');
+            videoContainer.innerHTML = "";
+
+            const categories = Object.keys(exerciseVideos);
+            categories.forEach(category => {
+                const videos = exerciseVideos[category];
+                const randomIndex = Math.floor(Math.random() * videos.length);
+                const video = videos[randomIndex];
+
+                const videoCard = document.createElement('div');
+                videoCard.className = 'video-card';
+                videoCard.innerHTML = `
+                    <h4>${video.title}</h4>
+                    <iframe src="${video.url}" allowfullscreen></iframe>
+                `;
+                videoContainer.appendChild(videoCard);
+            });
+        }
+
+        const exerciseVideos = {
+            cardio: [
+                { title: "High-intensity interval training (HIIT)", url: "https://www.youtube.com/embed/zr08J6wB53Y" },
+                { title: "Aerobic dance", url: "https://www.youtube.com/embed/d3LPrhI0v-w" },
+                { title: "Fat burning running training", url: "https://www.youtube.com/embed/c1mBu4tK90k" },
+                { title: "Skipping rope aerobic exercise", url: "https://www.youtube.com/embed/1BZM2Vre5oc" },
+                { title: "Full body aerobic training", url: "https://www.youtube.com/embed/3sEeVJEXTfY" }
+            ],
+            strength: [
+                { title: "Full body strength training", url: "https://www.youtube.com/embed/3p8EBPVZ2Iw" },
+                { title: "Dumbbell training", url: "https://www.youtube.com/embed/0JfYxMRsUCQ" },
+                { title: "Core strength training", url: "https://www.youtube.com/embed/2pLT-olgUJs" },
+                { title: "Upper body strength training", url: "https://www.youtube.com/embed/4Y2ZdHCOXok" },
+                { title: "Lower limb strength training", url: "https://www.youtube.com/embed/hRU_bPCelyU" }
+            ],
+            yoga: [
+                { title: "Yoga for beginners", url: "https://www.youtube.com/embed/v7AYKMP6rOE" },
+                { title: "Relaxation yoga", url: "https://www.youtube.com/embed/4pKly2JojMw" },
+                { title: "Morning yoga", url: "https://www.youtube.com/embed/C2RAjUEAoLI" },
+                { title: "Yoga before bed", url: "https://www.youtube.com/embed/9AjkUyX0rVw" },
+                { title: "Flow yoga", url: "https://www.youtube.com/embed/kuSZEZ0fCY0" }
+            ]
+        };
+
+        function leaveRecommend() {
+            const videoContainer = document.getElementById('videoContainer');
+            videoContainer.innerHTML = "";
+        }
+
+        function saveUserData() {
+            const userIndex = users.findIndex(user => user.username === currentUser.username);
+            users[userIndex] = currentUser;
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+
+        function loadUserData() {
+            level = currentUser.level;
+            xp = currentUser.xp;
+            nextLevelXP = currentUser.nextLevelXP;
+            updateDisplay();
+            initializeTasks();
+            displayAchievements();
+        }
+
+        window.onload = function() {
+            const username = localStorage.getItem('Username');
+            if (username) {
+                currentUser = users.find(user => user.username === username);
+                if (currentUser) {
+                    loginContainer.classList.add('hidden');
+                    appContainer.classList.remove('hidden');
+                    loadUserData();
+                    initializeTasks();
+                }
+            } else {
+                showMainPage();
+            }
+        };
+    </script>
+</body>
+</html>

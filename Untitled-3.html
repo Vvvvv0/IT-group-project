@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comment Board</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+        }
+        .comments {
+            margin-top: 20px;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Comment Board</h1>
+    <textarea id="commentInput" placeholder="Type your comment here..."></textarea>
+    <button onclick="saveComment()">Save Comment</button>
+
+    <div class="comments" id="commentsSection">
+        <h2>Previous Comments</h2>
+    </div>
+
+    <script>
+        // Display previous comments on page load
+        window.onload = function() {
+            const comments = localStorage.getItem('comments');
+            if (comments) {
+                document.getElementById('commentsSection').innerHTML += comments;
+            }
+        }
+
+        function saveComment() {
+            const commentInput = document.getElementById('commentInput');
+            const newComment = commentInput.value.trim();
+            if (newComment) {
+                const commentHtml = `<p>${newComment}</p>`;
+                
+                // Update comments section
+                const commentsSection = document.getElementById('commentsSection');
+                commentsSection.innerHTML += commentHtml;
+
+                // Save to localStorage
+                const existingComments = localStorage.getItem('comments') || '';
+                localStorage.setItem('comments', existingComments + commentHtml);
+                
+                // Clear the input box
+                commentInput.value = '';
+            } else {
+                alert('Please enter a comment!');
+            }
+        }
+    </script>
+</body>
+</html>

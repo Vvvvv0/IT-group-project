@@ -53,7 +53,7 @@
 
     <div id="app-container" class="hidden">
         <h1>Health and Fitness tracking app</h1>
-        <div class="icon" onclick="show_RegisterLogin()">Register</div>
+        <div class="icon" onclick="show_RegisterLogin()">Register / Login</div>
         <div class="hidden" id="missionList">
             MissionList:
             <div>Mission 1: Drink at least 8 glasses of water xp: 10<button id="mission1" onclick="completeTask('mission1', 10)">Complete</button></div>
@@ -197,7 +197,9 @@
             missionList.classList.remove('hidden');
             mainPage.classList.add('hidden');
             exercise.classList.add('hidden');
-            leave.classList.remove('hidden');
+            leave.classList.toggle('hidden');
+            mission.classList.add('hidden');
+            ach.classList.add('hidden');
         });
 
         leave.addEventListener('click', function() {
@@ -205,6 +207,8 @@
             mainPage.classList.remove('hidden');
             exercise.classList.remove('hidden');
             leave.classList.add('hidden');
+            mission.classList.remove('hidden')
+            ach.classList.remove('hidden');
         });
 
         clearData.addEventListener('click', function() {

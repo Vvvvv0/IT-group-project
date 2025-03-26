@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness App</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #eafaf1;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2 {
+            color: #2c3e50; 
+            text-align: center;
+        }
+
+        .icon {
+            cursor: pointer;
+            position: relative;
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #28a745; 
+            color: white;
+            border-radius: 8px;
+            text-align: center;
+            transition: background 0.3s;
+        }
+
+        .icon:hover {
+            background-color: #218838; 
+        }
+
+        .calculator, #exercise, #comment {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        input[type="text"], input[type="password"], input[type="number"], textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc; 
+            border-radius: 8px;
+            box-sizing: border-box;
+            transition: border 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            border-color: #28a745; 
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            background-color: #ffca3a; 
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #e0a800; 
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 1.2em;
+            text-align: center;
+        }
+
+        .comments {
+            margin-top: 20px;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+        }
+
+        .comments h2 {
+            text-align: center;
+        }
+
+        .comment {
+            padding: 10px;
+            border: 1px solid #ccc; 
+            border-radius: 8px;
+            margin: 5px 0;
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+    <div id="login-container" class="container hidden">
+        <h2>Login</h2>
+        <form id="login-form">
+            <label for="username">Username:</label>
+            <input type="text" id="username" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" required>
+            <button type="submit">Login</button>
+            <button onclick="rl_logout()">Log out</button>
+        </form>
+        <p id="login-error" class="hidden">Invalid username or password.</p>
+    </div>
+
+    <div id="app-container">
+        <h1>Health and Fitness Tracking App</h1>
+        <div class="icon" onclick="show_RegisterLogin()">Register / Login</div>
+        
+        <div class="calculator" id="bmi">
+            <h2>BMI Calculator</h2>
+            <input type="number" id="weight" placeholder="Weight (kg)" required>
+            <input type="number" id="height" placeholder="Height (m)" required>
+            <button onclick="calculateBMI()">Calculate BMI</button>
+            <div class="result" id="result"></div>
+        </div>
+
+        <div id="exercise">
+            <h2>Exercise Recommendation</h2>
+            <h3>Recommended Exercise</h3>
+            <button onclick="recommendExercise()">Get Recommendation</button>
+            <div class="video-container" id="videoContainer"></div>
+        </div>
+
+        <div id="comment">
+            <h1>Comment Board</h1>
+            <textarea id="commentInput" placeholder="Type your comment here..."></textarea>
+            <button onclick="saveComment()">Save Comment</button>
+            <div class="comments" id="commentsSection">
+                <h2>Previous Comments</h2>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        
+    </script>
+</body>
+</html>

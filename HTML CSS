@@ -115,12 +115,8 @@
             <button type="submit">Login</button>
             <button onclick="rl_logout()">Log out</button>
         </form>
-        <p id="login-error" class="hidden">Invalid username or password.</p>
     </div>
-
-    <div id="app-container">
-        <h1>Health and Fitness Tracking App</h1>
-        <div class="icon" onclick="show_RegisterLogin()">Register / Login</div>
+    
         
         <div class="calculator" id="bmi">
             <h2>BMI Calculator</h2>

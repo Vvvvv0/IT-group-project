@@ -23,7 +23,7 @@
         }
 
         h1, h2 {
-            color: #2c3e50; 
+            color: #2c3e50;
             text-align: center;
         }
 
@@ -32,7 +32,7 @@
             position: relative;
             margin: 15px 0;
             padding: 10px;
-            background-color: #28a745; 
+            background-color: #28a745;
             color: white;
             border-radius: 8px;
             text-align: center;
@@ -40,10 +40,10 @@
         }
 
         .icon:hover {
-            background-color: #218838; 
+            background-color: #218838;
         }
 
-        .calculator, #exercise, #comment {
+        .calculator, #exercise, #comment, #recipe {
             background: #f8f9fa;
             padding: 20px;
             border-radius: 8px;
@@ -55,28 +55,28 @@
             width: 100%;
             padding: 12px;
             margin: 10px 0;
-            border: 1px solid #ccc; 
+            border: 1px solid #ccc;
             border-radius: 8px;
             box-sizing: border-box;
             transition: border 0.3s;
         }
 
         input:focus, textarea:focus {
-            border-color: #28a745; 
+            border-color: #28a745;
         }
 
         button {
             padding: 10px 15px;
             border: none;
             border-radius: 8px;
-            background-color: #ffca3a; 
+            background-color: #ffca3a;
             color: white;
             cursor: pointer;
             transition: background 0.3s;
         }
 
         button:hover {
-            background-color: #e0a800; 
+            background-color: #e0a800;
         }
 
         .result {
@@ -97,7 +97,7 @@
 
         .comment {
             padding: 10px;
-            border: 1px solid #ccc; 
+            border: 1px solid #ccc;
             border-radius: 8px;
             margin: 5px 0;
             background-color: #f1f1f1;
@@ -116,35 +116,39 @@
             <button onclick="rl_logout()">Log out</button>
         </form>
     </div>
-    
-        
-        <div class="calculator" id="bmi">
-            <h2>BMI Calculator</h2>
-            <input type="number" id="weight" placeholder="Weight (kg)" required>
-            <input type="number" id="height" placeholder="Height (m)" required>
-            <button onclick="calculateBMI()">Calculate BMI</button>
-            <div class="result" id="result"></div>
-        </div>
 
-        <div id="exercise">
-            <h2>Exercise Recommendation</h2>
-            <h3>Recommended Exercise</h3>
-            <button onclick="recommendExercise()">Get Recommendation</button>
-            <div class="video-container" id="videoContainer"></div>
-        </div>
+    <div class="calculator" id="bmi">
+        <h2>BMI Calculator</h2>
+        <input type="number" id="weight" placeholder="Weight (kg)" required>
+        <input type="number" id="height" placeholder="Height (m)" required>
+        <button onclick="calculateBMI()">Calculate BMI</button>
+        <div class="result" id="result"></div>
+    </div>
 
-        <div id="comment">
-            <h1>Comment Board</h1>
-            <textarea id="commentInput" placeholder="Type your comment here..."></textarea>
-            <button onclick="saveComment()">Save Comment</button>
-            <div class="comments" id="commentsSection">
-                <h2>Previous Comments</h2>
-            </div>
+    <div id="exercise">
+        <h2>Exercise Recommendation</h2>
+        <h3>Recommended Exercise</h3>
+        <button onclick="recommendExercise()">Get Recommendation</button>
+        <div class="video-container" id="videoContainer"></div>
+    </div>
+
+    <div id="comment">
+        <h1>Comment Board</h1>
+        <textarea id="commentInput" placeholder="Type your comment here..."></textarea>
+        <button onclick="saveComment()">Save Comment</button>
+        <div class="comments" id="commentsSection">
+            <h2>Previous Comments</h2>
         </div>
     </div>
 
+    <div id="recipe" class="recipe">
+        <h2>Recipe Recommendation</h2>
+        <button onclick="getRecipe()"></button>
+        <div class="result" id="recipeResult"></div>
+    </div>
+
     <script>
-        
+
     </script>
 </body>
 </html>

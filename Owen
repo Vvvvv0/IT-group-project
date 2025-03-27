@@ -1,1 +1,11 @@
-
+function getRecipe() {
+            const recipes = [
+                "Spaghetti Aglio e Olio - A simple pasta dish with garlic, olive oil, and chili flakes.",
+                "Chicken Stir-Fry - Quick-cooked chicken with vegetables and soy sauce.",
+                "Vegetable Curry - A hearty mix of vegetables simmered in coconut milk and spices.",
+                "Quinoa Salad - Quinoa tossed with fresh vegetables, herbs, and a lemon vinaigrette.",
+                "Chocolate Mug Cake - A quick dessert made in a mug with cocoa powder and flour."
+            ];
+            const randomRecipe = recipes[Math.floor(Math.random() * recipes.length)];
+            document.getElementById('recipeResult').innerText = randomRecipe;
+        }

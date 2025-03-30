@@ -202,6 +202,7 @@ function showSlides() {
    images.forEach((img, index) => {
         img.style.display = index === slideIndex ? 'block' : 'none';
     });
+    localStorage.setItem("slideIndex",sileIndex);
 }
 function changeSlides() {
     slideIndex = (slideIndex + 1) % images.length;

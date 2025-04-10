@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness App</title>
+    <style>
+        .hidden { display: none; }
+        .video-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            border-radius: 5px;
+            padding: 10px;
+            width: calc(33.33% - 10px);
+            box-sizing: border-box;
+        }
+        .achievements { margin-top: 20px; }
+        .achievement { padding: 10px; border: 1px solid #ccc; margin-bottom: 10px; text-align: left; }
+        .icon { cursor: pointer; position: absolute; top: 10px; right: 10px; }
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 10px;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #eafaf1;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .calculator, #exercise, #comment, .recipe, .mainPage {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        input[type="text"], input[type="password"], input[type="number"], textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            transition: border 0.3s;
+        }
+        input:focus, textarea:focus {
+            border-color: #28a745;
+        }
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5%;
+            background-color: #ffca3a;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #e0a800;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.2em;
+            text-align: center;
+        }
+        .comments {
+            margin-top: 20px;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+        }
+        .comments h2 {
+            text-align: center;
+        }
+        .comment {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin: 5px 0;
+            background-color: #f1f1f1;
+        }
+        .warming {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .sildeimage {
+            position: relative;
+            width: 500px;
+            margin: 0 auto;
+        }
+        .sildeimage img {
+            display: none;
+            width: 100%;
+            border-radius: 10px;
+        }
+        .sildeimage button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .sildeimage #prev {
+            left: 10px;
+        }
+        .sildeimage #next {
+            right: 10px;
+        }
+        .changeMonth {
+            text-align: center;
+            margin: 20px;
+        }
+        .changeMonth button {
+            margin: 5px;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .changeMonth button:hover {
+            background-color: #0056b3;
+        }
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            width: 80%;
+            max-width: 600px;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            border: 1px solid #ddd;
+            text-align: center;
+            padding: 10px;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        td {
+            cursor: pointer;
+        }
+        td:hover {
+            background-color: #f1f1f1;
+        }
+        #activity {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="login-container" class="container hidden">
+        <h2>Login</h2>
+        <form id="login-form">
+            <label for="username">Username:</label>
+            <input type="text" id="username" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" required>
+            <button type="submit">Login</button>
+            <button type="button" onclick="showRegister()">Register page</button>
+            <button onclick="rl_logout()">Log out</button>
+        </form>
+        <p id="login-error" class="hidden">Invalid username or password.</p>
+    </div>
+
+    <div id="register-container" class="container hidden">
+        <h2>Register</h2>
+        <form id="register-form">
+            <label for="new-username">Username:</label>
+            <input type="text" id="new-username" required>
+            <label for="new-password">Password:</label>
+            <input type="password" id="new-password" required>
+            <button type="submit">Register</button>
+            <button type="button" onclick="showLogin()">Login page</button>
+            <button onclick="rl_logout()">Log out</button>
+        </form>
+        <p id="register-error" class="hidden">Account already exists!</p>
+    </div>
+
+    <div id="app-container">
+        <button class="button" onclick="show_RegisterLogin()">Register / Login</button>
+        <div class="hidden" id="missionList">
+            <button id="leave">Hide mission list</button> <br>
+            Mission List:
+            <div>Mission 1: Drink at least 8 glasses of water xp: 10<button id="mission1" onclick="completeTask('mission1', 10)">Complete</button></div>
+            <div>Mission 2: Include at least 5 servings of fruits and vegetables in your meals xp: 15<button id="mission2" onclick="completeTask('mission2', 15)">Complete</button></div>
+            <div>Mission 3: Engage in a stress-relief activity like yoga, reading, or listening to music for 15 minutes xp: 15<button id="mission3" onclick="completeTask('mission3', 15)">Complete</button></div>
+            <div>Mission 4: Complete a 15-30 minutes workout xp: 20<button id="mission4" onclick="completeTask('mission4', 20)">Complete</button></div>
+            <div>Mission 5: Follow a bedtime routine to prepare for a good night's sleep xp: 30<button id="mission5" onclick="completeTask('mission5', 30)">Complete</button></div>
+        </div>
+
+        <button id="toggleCalendar" onclick="toggleCalendar()">Show Calendar</button>
+        <div class="changeMonth" id="calendarContainer" style="display: none;">
+            <button class="prev" onclick="previousMonth()">Previous month</button>
+            <button class="next" onclick="nextMonth()">Next Month</button>
+            <div>
+                <h2 id="monthyear"></h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Sun</th>
+                            <th>Mon</th>
+                            <th>Tue</th>
+                            <th>Wed</th>
+                            <th>Thu</th>
+                            <th>Fri</th>
+                            <th>Sat</th>
+                        </tr>
+                    </thead>
+                    <tbody id="calendarbody" style="cursor: pointer;"></tbody>
+                </table>
+            </div>
+            <div id="activity"></div>
+        </div>
+
+        <div class="warming">
+            <div class="sildeimage" id="sildeImage">
+                <img src="IMG-20250330-WA0001.jpg" alt="Image" width="500">
+                <img src="IMG-20250330-WA0002.jpg" alt="Image" width="500">
+                <img src="IMG-20250330-WA0003.jpg" alt="Image" width="500">
+                <img src="IMG-20250330-WA0004.jpg" alt="Image" width="500">
+                <img src="IMG-20250330-WA0005.jpg" alt="Image" width="500">
+                <button id="prev" onclick="previous()">Previous</button>
+                <button id="next" onclick="next()">Next</button>
+            </div>
+        </div>
+
+        <div id="mission" class="hidden">
+            <button id="showMissionList">Mission list</button>
+            <button id="leave">X</button>
+            <div class="mainPage" id="main-page">
+                <p>Level: <span id="level-display">0</span></p>
+                <p>XP: <span id="xp-display">0</span></p>
+                <p>Next level XP: <span id="nextLevelXP-display">50</span></p>
+            </div>
+        </div>
+
+        <div id="ach" class="container hidden">
+            <h2>Achievement</h2>
+            <div class="achievement" id="achievements"></div>
+        </div>
+
+        <div class="calculator" id="bmi">
+            <h2>BMI Calculator</h2>
+            <input type="number" id="weight" placeholder="Weight (kg)" required>
+            <input type="number" id="height" placeholder="Height (m)" required>
+            <button onclick="calculateBMI()">Calculate BMI</button>
+            <div class="result" id="result"></div>
+        </div>
+
+        <div id="recipe" class="recipe">
+            <h2>Healthy Recipe Recommendation</h2>
+            <button onclick="getRecipe()">Get Random Recipe</button>
+            <button onclick="toggleRecipeForm()">Create Recipe</button>
+
+            <div id="recipeForm" style="display:none; margin-top: 10px;">
+                <h3>Add Your Recipe</h3>
+                <input type="text" id="recipeName" placeholder="Recipe Name" required>
+                <textarea id="recipeDescription" placeholder="Recipe Description" required></textarea>
+                <button onclick="addRecipe()">Submit Recipe</button>
+            </div>
+
+            <div class="result" id="recipeResult"></div>
+        </div>
+
+        <div id="exercise">
+            <h2>Exercise Recommendation</h2>
+            <h3>Recommended Exercise</h3>
+            <button onclick="recommendExercise()">Get Recommendation</button>
+            <button id="leaveExercise" onclick="leaveRecommend()">X</button>
+            <div class="video-container" id="videoContainer"></div>
+        </div>
+
+        <div id="comment">
+            <h1>Comment Board</h1>
+            <textarea id="commentInput" placeholder="Type your comment here..."></textarea>
+            <button onclick="saveComment()">Save Comment</button>
+
+            <div class="comments" id="commentsSection">
+                <h2>Previous Comments</h2>
+            </div>
+        </div>
+    </div>
+    <script>
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+        const loginContainer = document.getElementById('login-container');
+        const registerContainer = document.getElementById('register-container');
+        const appContainer = document.getElementById('app-container');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const loginError = document.getElementById('login-error');
+        const registerError = document.getElementById('register-error');
+        const mission = document.getElementById('mission');
+        const ach = document.getElementById('ach');
+        const comment = document.getElementById('comment');
+        const bmi = document.getElementById('bmi');
+        let currentUser = null;
+
+        function show_RegisterLogin(){
+            showRegister();
+        }
+
+        function showLogin() {
+            loginContainer.classList.remove('hidden');
+            registerContainer.classList.add('hidden');
+
+        }
+
+        function showRegister() {
+            loginContainer.classList.add('hidden');
+            registerContainer.classList.remove('hidden');
+            appContainer.classList.add('hidden');
+            comment.classList.add('hidden')
+            bmi.classList.add('hidden');
+            warming.classList.add('hidden');
+
+        }
+
+        function showMainPage(){
+            appContainer.classList.remove('hidden');
+            registerContainer.classList.add('hidden');
+            loginContainer.classList.add('hidden');
+            ach.classList.add('hidden');
+            comment.classList.remove('hidden')
+            bmi.classList.remove('hidden');
+            warming.classList.remove('hidden');
+        }
+
+        function rl_logout() {
+            currentUser = null;
+            showMainPage();
+        }
+
+        loginForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const user = users.find(user => user.username === username && user.password === password);
+
+            if (user) {
+                localStorage.setItem('Username', username);
+                currentUser = user;
+                loginContainer.classList.add('hidden');
+                appContainer.classList.remove('hidden');
+                mission.classList.remove('hidden');
+                ach.classList.remove('hidden');
+                comment.classList.remove('hidden')
+                bmi.classList.remove('hidden');
+                loadUserData();
+                initializeTasks();
+                updateDisplay();
+            } else {
+                loginError.classList.remove('hidden');
+            }
+        });
+
+        registerForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const username = document.getElementById('new-username').value;
+            const password = document.getElementById('new-password').value;
+
+            if (users.some(user => user.username === username)) {
+                registerError.classList.remove('hidden');
+            } else {
+                users.push({ username, password, level: 0, xp: 0, nextLevelXP: 50, missions: {}, achievements: [] });
+                localStorage.setItem('users', JSON.stringify(users));
+                registerError.classList.add('hidden');
+                showLogin();
+            }
+        });
+
+        function logout() {
+            localStorage.removeItem('Username')
+            currentUser = null;
+            appContainer.classList.add('hidden');
+            loginContainer.classList.remove('hidden');
+        }
+
+        window.addEventListener("beforeunload", function (event) {
+            logout();
+        });
+
+        document.addEventListener("visibilitychange", function () {
+            if (document.visibilityState === "hidden") {
+                logout();
+            }
+        });
+
+        let currentdate = new Date();
+        let year = currentdate.getFullYear();
+        let month = currentdate.getMonth();
+        let selectedCell = null;
+
+        function monthName(month) {
+            const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            document.getElementById('monthyear').textContent = months[month] + ' ' + year;
+        }
+
+        function calendar() {
+            let tbody = document.getElementById('calendarbody');
+            tbody.innerHTML = '';
+            const firstDay = new Date(year, month, 1).getDay();
+            const lastDay = new Date(year, month + 1, 0).getDate();
+            let date = 1;
+            for (let i = 0; i < 6; i++) {
+                let row = document.createElement('tr');
+                for (let j = 0; j < 7; j++) {
+                    const cell = document.createElement('td');
+                    if ((i === 0 && j < firstDay) || date > lastDay) {
+                        cell.textContent = '';
+                    } else {
+                        cell.textContent = date;
+                        cell.addEventListener('click', function() {
+                            selectedCell = cell;
+                            let activity = prompt('Enter activity');
+                            if (activity) {
+                                const div = document.createElement('div');
+                                div.textContent = activity;
+                                cell.appendChild(div);
+                            }
+                        });
+                        date++;
+                    }
+                    row.appendChild(cell);
+                }
+                tbody.appendChild(row);
+            }
+            monthName(month);
+        }
+
+        function addActivity() {
+            let inputs = document.getElementById("activity");
+            let activity = inputs.querySelector('input').value;
+            if (selectedCell && activity) {
+                const div = document.createElement('div');
+                div.textContent = activity;
+                selectedCell.appendChild(div);
+                inputs.querySelector('input').value = '';
+            }
+        }
+
+        function previousMonth() {
+            month--;
+            if (month < 0) {
+                month = 11;
+                year--;
+            }
+            calendar();
+        }
+
+        function nextMonth() {
+            month++;
+            if (month > 11) {
+                month = 0;
+                year++;
+            }
+            calendar();
+        }
+
+        calendar();
+
+        function toggleCalendar() {
+            const calendarContainer = document.getElementById('calendarContainer');
+            const toggleButton = document.getElementById('toggleCalendar');
+            if (calendarContainer.style.display === 'none') {
+                calendarContainer.style.display = 'block';
+                toggleButton.textContent = 'Hide Calendar';
+            } else {
+                calendarContainer.style.display = 'none';
+                toggleButton.textContent = 'Show Calendar';
+            }
+        }
+
+        let slideIndex = 0;
+        let images = document.querySelectorAll('.sildeimage img');
+        function showSlides() {
+        images.forEach((img, index) => {
+                img.style.display = index === slideIndex ? 'block' : 'none';
+            });
+        }
+        function changeSlides() {
+            slideIndex = (slideIndex + 1) % images.length;
+            showSlides(slideIndex);
+        }
+
+        function previous() {
+            slideIndex = (slideIndex - 1 + images.length) % images.length;
+            showSlides(slideIndex);
+        }
+        function next() {
+            slideIndex = (slideIndex + 1) % images.length;
+            showSlides(slideIndex);
+        }
+        setInterval(changeSlides, 6000);
+        showSlides(slideIndex);
+        calendar();
+
+
+        const showMissionList = document.getElementById('showMissionList');
+        const missionList = document.getElementById('missionList');
+        const leave = document.getElementById('leave');
+        const mainPage = document.getElementById('main-page');
+        const xpDisplay = document.getElementById('xp-display');
+        const levelDisplay = document.getElementById('level-display');
+        const nextLevelXP_Display = document.getElementById('nextLevelXP-display');
+        const exercise = document.getElementById('exercise');
+        const recipe = document.getElementById('recipe');
+        const toggleButton = document.getElementById('toggleButton');
+
+        showMissionList.addEventListener('click', function() {
+            missionList.classList.remove('hidden');
+        });
+
+        leave.addEventListener('click', function() {
+            missionList.classList.add('hidden');
+            mainPage.classList.remove('hidden');
+            exercise.classList.remove('hidden');
+            mission.classList.remove('hidden');
+            ach.classList.remove('hidden');
+            leave.classList.remove('hidden');
+            comment.classList.remove('hidden');
+            bmi.classList.remove('hidden');
+            warming.classList.remove('hidden');
+        });
+
+        function completeTask(missionId, xpReward) {
+            const button = document.getElementById(missionId);
+            if (button.disabled) return;
+            button.disabled = true;
+            button.textContent = "Completed";
+            currentUser.missions[missionId] = true;
+            currentUser.xp += xpReward;
+            saveUserData();
+            updateDisplay();
+            checkLevelUP();
+        }
+
+        function checkLevelUP() {
+            if (currentUser.xp >= currentUser.nextLevelXP) {
+                currentUser.level++;
+                currentUser.xp = currentUser.xp - currentUser.nextLevelXP;
+                currentUser.nextLevelXP = Math.round(currentUser.nextLevelXP * 2);
+                alert(`Level up! You are now level ${currentUser.level}.`);
+                saveUserData();
+                updateDisplay();
+                checkAchievements(currentUser.level);
+            }
+        }
+
+        function updateDisplay() {
+            xpDisplay.textContent = currentUser.xp;
+            levelDisplay.textContent = currentUser.level;
+            nextLevelXP_Display.textContent = currentUser.nextLevelXP;
+        }
+
+        function resetTasks() {
+            const missions = ['mission1', 'mission2', 'mission3', 'mission4', 'mission5'];
+            missions.forEach(missionId => {
+                const button = document.getElementById(missionId);
+                button.disabled = false;
+                button.textContent = "Complete";
+            });
+            displayAchievements();
+        }
+
+        function initializeTasks() {
+            const missions = ['mission1', 'mission2', 'mission3', 'mission4', 'mission5'];
+            missions.forEach(missionId => {
+                const completed = currentUser.missions[missionId] === true;
+                const button = document.getElementById(missionId);
+                if (completed) {
+                    button.disabled = true;
+                    button.textContent = "Completed";
+                }
+            });
+        }
+
+        const achievements = [
+            { level: 'Beginner', unlocked: false },
+            { level: 'Intermediate', unlocked: false },
+            { level: 'Advanced', unlocked: false }
+        ];
+
+        function loadAchievements() {
+            return currentUser.achievements.length ? currentUser.achievements : achievements;
+        }
+
+        function saveAchievements(achievements) {
+            currentUser.achievements = achievements;
+            saveUserData();
+        }
+
+        function checkAchievements(level) {
+            const achievements = loadAchievements();
+            let newAchievements = false;
+            achievements.forEach(achievement => {
+                if (!achievement.unlocked && level >= achievement.level) {
+                    achievement.unlocked = true;
+                    newAchievements = true;
+                    alert(`Unlock achievement! You reached level ${achievement.level}!`);
+                }
+            });
+            if (newAchievements) {
+                saveAchievements(achievements);
+                displayAchievements();
+            }
+        }
+
+        function displayAchievements() {
+            const achievements = loadAchievements();
+            const achievementsContainer = document.getElementById('achievements');
+            achievementsContainer.innerHTML = '';
+
+            achievements.forEach(achievement => {
+                if (achievement.unlocked) {
+                    const achievementElement = document.createElement('div');
+                    achievementElement.className = 'achievement';
+                    achievementElement.innerHTML = `
+                        <strong>Level ${achievement.level}</strong><br>`;
+                    achievementsContainer.appendChild(achievementElement);
+                }
+            });
+        }
+
+        function calculaateBMI() {
+            const weight = parseFloat(document.getElementById('weight').value);
+            const height = parseFloat(document.getElementById('height').value);
+            const resultDiv = document.getElementById('result');
+
+            if (weight > 0 && height > 0) {
+                const bmi = (weight / (height * height)).toFixed(2);
+                weight.value = '';
+                height.value = '';
+                resultDiv.innerHTML = `Your BMI is: ${bmi}` + '<br>' + "BMI < 18.5: 'Underweight', requires more exercise and a balanced diet to increase physical fitness and maintain health!" + '<br>';
+                resultDiv.innerHTML += '18.5 <= BMI < 24: "Congratulations!" Keep maintaining your healthy weight' + '<br>'
+                resultDiv.innerHTML += '24 <= BMI < 27: "Overweight", be careful and exercise as soon as possible' + '<br>'
+                resultDiv.innerHTML += 'BMI >= 27: "Obesity"! You need to practice "healthy weight management" immediately!'
+
+            } else {
+                resultDiv.innerHTML = 'Please enter valid weight and height';
+            }
+        }
+
+            function getRecipe() {
+                const Recipe = recipes[Math.floor(Math.random() * recipes.length)];
+                document.getElementById('recipeResult').innerHTML = `
+                    <h3>${Recipe.name}</h3>
+                    <p>${Recipe.description}</p>
+                `;
+            }
+
+            const recipes = [
+                {
+                    name: "Spaghetti Aglio e Olio",
+                    description: "A simple pasta dish with garlic, olive oil, and chili flakes."
+                },
+                {
+                    name: "Chicken Stir-Fry",
+                    description: "Quick-cooked chicken with vegetables and soy sauce."
+                },
+                {
+                    name: "Vegetable Curry",
+                    description: "A hearty mix of vegetables simmered in coconut milk and spices."
+                },
+                {
+                    name: "Quinoa Salad",
+                    description: "Quinoa tossed with fresh vegetables, herbs, and a lemon vinaigrette."
+                },
+                {
+                    name: "Chocolate Mug Cake",
+                    description: "A quick dessert made in a mug with cocoa powder and flour."
+                }
+            ];
+
+            function toggleRecipeForm() {
+                const form = document.getElementById('recipeForm');
+                form.style.display = form.style.display === 'none' ? 'block' : 'none';
+            }
+
+            function addRecipe() {
+                const name = document.getElementById('recipeName').value;
+                const description = document.getElementById('recipeDescription').value;
+
+                if (name && description) {
+                    recipes.push({ name, description });
+                    alert("Recipe added successfully!");
+                    document.getElementById('recipeName').value = '';
+                    document.getElementById('recipeDescription').value = '';
+                    toggleRecipeForm();
+                } else {
+                    alert("Please fill in both fields.");
+                }
+            }
+
+        function recommendExercise() {
+            const videoContainer = document.getElementById('videoContainer');
+            videoContainer.innerHTML = "";
+
+            const categories = Object.keys(exerciseVideos);
+            categories.forEach(category => {
+                const videos = exerciseVideos[category];
+                const randomIndex = Math.floor(Math.random() * videos.length);
+                const video = videos[randomIndex];
+
+                const videoCard = document.createElement('div');
+                videoCard.className = 'video-card';
+                videoCard.innerHTML = `
+                    <h4>${video.title}</h4>
+                    <iframe src="${video.url}" allowfullscreen></iframe>
+                `;
+                videoContainer.appendChild(videoCard);
+            });
+        }
+
+        const exerciseVideos = {
+            cardio: [
+                { title: "High-intensity interval training (HIIT)", url: "https://www.youtube.com/embed/zr08J6wB53Y" },
+                { title: "Aerobic dance", url: "https://www.youtube.com/embed/d3LPrhI0v-w" },
+                { title: "Fat burning running training", url: "https://www.youtube.com/embed/c1mBu4tK90k" },
+                { title: "Skipping rope aerobic exercise", url: "https://www.youtube.com/embed/1BZM2Vre5oc" },
+                { title: "Full body aerobic training", url: "https://www.youtube.com/embed/3sEeVJEXTfY" }
+            ],
+            strength: [
+                { title: "Full body strength training", url: "https://www.youtube.com/embed/3p8EBPVZ2Iw" },
+                { title: "Dumbbell training", url: "https://www.youtube.com/embed/0JfYxMRsUCQ" },
+                { title: "Core strength training", url: "https://www.youtube.com/embed/2pLT-olgUJs" },
+                { title: "Upper body strength training", url: "https://www.youtube.com/embed/4Y2ZdHCOXok" },
+                { title: "Lower limb strength training", url: "https://www.youtube.com/embed/hRU_bPCelyU" }
+            ],
+            yoga: [
+                { title: "Yoga for beginners", url: "https://www.youtube.com/embed/v7AYKMP6rOE" },
+                { title: "Relaxation yoga", url: "https://www.youtube.com/embed/4pKly2JojMw" },
+                { title: "Morning yoga", url: "https://www.youtube.com/embed/C2RAjUEAoLI" },
+                { title: "Yoga before bed", url: "https://www.youtube.com/embed/9AjkUyX0rVw" },
+                { title: "Flow yoga", url: "https://www.youtube.com/embed/kuSZEZ0fCY0" }
+            ]
+        };
+
+        function leaveRecommend() {
+            const videoContainer = document.getElementById('videoContainer');
+            videoContainer.innerHTML = "";
+        }
+
+        function saveUserData() {
+            const userIndex = users.findIndex(user => user.username === currentUser.username);
+            users[userIndex] = currentUser;
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+
+        function loadUserData() {
+            level = currentUser.level;
+            xp = currentUser.xp;
+            nextLevelXP = currentUser.nextLevelXP;
+            updateDisplay();
+            initializeTasks();
+            displayAchievements();
+        }
+
+        window.onload = function() {
+
+            showMainPage();
+            loadUserData();
+            initializeTasks();
+        };
+    </script>
+    <script>
+        window.onload = function() {
+            const comments = localStorage.getItem('comments');
+            if (comments) {
+                document.getElementById('commentsSection').innerHTML += comments;
+            }
+        }
+
+        function saveComment() {
+            const commentInput = document.getElementById('commentInput');
+            const newComment = commentInput.value.trim();
+            if (newComment) {
+                const commentHtml = `<p>${newComment}</p>`;
+
+                const commentsSection = document.getElementById('commentsSection');
+                commentsSection.innerHTML += commentHtml;
+
+                const existingComments = localStorage.getItem('comments') || '';
+                localStorage.setItem('comments', existingComments + commentHtml);
+
+                commentInput.value = '';
+            } else {
+                alert('Please enter a comment!');
+            }
+        }
+    </script>
+
+</body>
+</html>
